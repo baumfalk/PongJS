@@ -1,0 +1,52 @@
+Two paddles, one on the left side of the screen, one of the right side of the screen.
+
+A 'ball' (one pixel) bounces through the screen. 
+If it bounces on the top/bottom or on a paddle of the screen, its angle is reversed.
+If it touches the left/right side, the right/left paddle scores a point respectively.
+
+The game ends when one paddle has five points.
+
+
+------ Variables
+all length measurements are in pixels.
+height = height of the screen
+width = width of the screen
+
+paddleWidth = width of the paddle (between 1 and height)
+
+lPaddleLoc/rPaddleLoc = location on the y-axis of the left/right paddle respectively, starting from the top of the paddle. If it is 0, the paddle is at the top of the screen. if it is height-paddleWidth it is at the bottom of the screen.
+
+ballXLoc = horizontal location of the ball, 0 is left, 'width' is to the right
+ballYLoc = vertical location of the ball, 0 is top, ' height' is bottom.
+
+ballXVel = horizontal velocity of the ball, i.e. how many pixels does it move on the x-axis per tick. a positive/negative velocity means it's moving to the right/left respectively
+ballYVel = vertical velocity of the ball. a positive/negative velocity means it's moving to the bottom/top respectively
+
+scoreL = current score for the left paddle
+scoreR = current score for the right paddle
+
+fps = number of ticks (i.e. screen updates) per second.
+
+---- Semantics
+'w' and 's' control the left paddle, 'up' and 'down' the right paddle
+
+gameloop:
+  // ball starts in the middle of the screen
+  ballXLoc = width/2
+  ballYLoc = height/2
+  // ball moves down and to the right
+  ballXVel = 5
+  ballYVel = 5
+
+  //paddle begint in het midden
+  lPaddleLoc = height/2 - paddleWidth/2 // paddleWidth/2 is nodig omdat de paddle
+  anders te laag begint aangezien lPaddleLoc de positie van de *bovenkant* van de paddle definieert.
+  rPaddleLoc = lPaddleLoc
+
+  draw() // teken de boel
+
+do the following:
+
+  draw() // teken de boel
+while (scoreL < 5 and scoreR < 5)
+
