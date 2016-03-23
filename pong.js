@@ -68,8 +68,6 @@ function Pong() {
           } else {
             this.ballYVel = -1*Math.max(this.ballYVel -1,-10);
           }
-
-          console.log(this.ballYVel);
         } else if(this.ballXLoc+this.ballThickness >= this.width - this.paddleThickness
           && this.ballXLoc+this.ballThickness <= this.width
           && this.ballYLoc+this.ballThickness >= this.rPaddleLoc
@@ -81,8 +79,6 @@ function Pong() {
           } else {
             this.ballYVel = -1*Math.max(this.ballYVel -1,-10);
           }
-
-          console.log(this.ballYVel);
         } else {
           //check top/bottom wall collisions
           if(this.ballYLoc> this.height) {
