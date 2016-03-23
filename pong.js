@@ -1,5 +1,4 @@
 function Pong() {
-  var pong = this;
   this.started = false;
   this.height = 100;
   this.width = 2 * this.height;
@@ -24,6 +23,7 @@ function Pong() {
 
   // graphical variables
   this.canvas = document.getElementById("pong");
+  this.score = document.getElementById("score");
   this.context = this.canvas.getContext("2d");
 
   this.canvas.height = this.height;
@@ -39,62 +39,97 @@ function Pong() {
     this.context.fillRect(0, this.lPaddleLoc, this.paddleThickness, this.paddleWidth);
     this.context.fillRect(this.width-this.paddleThickness, this.rPaddleLoc, this.paddleThickness, this.paddleWidth);
   }
+  this.resetBall = function() {
+    this.ballXLoc = this.width / 2;
+    this.ballYLoc = this.height / 2;
 
-  document.addEventListener("keyup", function(e) {
-    console.log(e);
-    switch(e.key) {
-      case "w":
-        if(this.lPaddleLoc >= this.paddleSpeed) {
-          this.lPaddleLoc = this.lPaddleLoc - this.paddleSpeed; 
+    this.ballXVel = this.height / 50;
+    this.ballYVel = this.width / 50;
+  }
+  this.initialize = function() {
+    //unpause
+    if(this.started === false) {
+      this.started = true;
+      this.intervalID = setInterval(function() {
+
+        // compute movement
+        this.ballXLoc += this.ballXVel;
+        this.ballYLoc += this.ballYVel;
+       
+        //check paddle/ball collision
+        if(this.ballXLoc >= 0
+          && this.ballXLoc <= 0 + this.paddleThickness
+          && this.ballYLoc+this.ballThickness >= this.lPaddleLoc
+          && this.ballYLoc <= this.lPaddleLoc + this.paddleWidth) {
+          this.ballXVel = -1*this.ballXVel;
+          this.ballXLoc = 0 + this.paddleThickness;
+          this.ballYVel = Math.min(-1*this.ballYVel + 1,10);
+        } else if(this.ballXLoc+this.ballThickness >= this.width - this.paddleThickness
+          && this.ballXLoc+this.ballThickness <= this.width
+          && this.ballYLoc+this.ballThickness >= this.rPaddleLoc
+          && this.ballYLoc <= this.rPaddleLoc + this.paddleWidth) {
+          this.ballXVel = -1*this.ballXVel;
+          this.ballXLoc = this.width - this.paddleThickness - this.ballThickness;
+          this.ballYVel = Math.max(-10,-1*this.ballYVel - 1);
+
+        } else {
+          //check top/bottom wall collisions
+          if(this.ballYLoc> this.height) {
+            this.ballYLoc = 2 * this.height - this.ballYLoc;
+            this.ballYVel = -1*this.ballYVel;
+          } else if(this.ballYLoc < 0) {
+            this.ballYLoc = - this.ballYLoc;
+            this.ballYVel = -1*this.ballYVel;
+          }
+          // check left/right wall collisions
+          //left scores
+          if(this.ballXLoc> this.width) {
+            this.ballXLoc = 2 * this.width - this.ballXLoc;
+            this.ballXVel = -1*this.ballXVel;
+            this.scoreL += 1;
+            this.score.innerHTML = this.scoreL + " - " + this.scoreR;
+            this.resetBall();
+            //right scores
+          } else if(this.ballXLoc < 0) {
+            this.ballXLoc = - this.ballXLoc;
+            this.ballXVel = -1*this.ballXVel;
+            this.scoreR += 1;
+            this.score.innerHTML = this.scoreL + " - " + this.scoreR;
+            this.resetBall();
+          }
         }
-        break;
-      case "s": 
-        this.lPaddleLoc = this.lPaddleLoc + this.paddleSpeed;
-        break;
-      case "ArrowUp":
-        if(this.rPaddleLoc >= this.paddleSpeed) {
-          this.rPaddleLoc = this.rPaddleLoc - this.paddleSpeed;
-        }
-        break;
-      case "ArrowDown": 
-        this.rPaddleLoc = this.rPaddleLoc + this.paddleSpeed;
-        break;
-      // start the game  
-      case " ":
-        if(this.started === false) {
-          this.started = true;
-          setInterval(function() {
-            this.ballXLoc += this.ballXVel;
-            this.ballYLoc += this.ballYVel;
-           
-            if(this.ballXLoc> this.width) {
-              this.ballXLoc = 2 * this.width - this.ballXLoc;
-              this.ballXVel = -1*this.ballXVel;
 
-            } else if(this.ballXLoc < 0) {
-              this.ballXLoc = - this.ballXLoc;
-              this.ballXVel = -1*this.ballXVel;
-
-            }
-
-            if(this.ballYLoc> this.height) {
-              this.ballYLoc = 2 * this.height - this.ballYLoc;
-              this.ballYVel = Math.max(-10,-1*this.ballYVel - 1);
-
-            } else if(this.ballYLoc < 0) {
-              this.ballYLoc = - this.ballYLoc;
-              this.ballYVel = Math.min(-1*this.ballYVel + 1,10);
-
-            }
-            
-            console.log(this.ballXVel +" "+this.ballYVel);
-            this.draw();
-          }.bind(this),this.timeBetweenTicks);
-        }
-        break;    
-      default:
-        break;
+       
+        // check 
+        // draw frame
+        this.draw();
+      }.bind(this),this.timeBetweenTicks);
+    } else { //pause
+      clearInterval(this.intervalID);
+      this.started = false;
     }   
+  }
+  document.addEventListener("keyup", function(e) {
+    if(e.key === "w" || e.keyCode === 87) {
+      if(this.lPaddleLoc >= this.paddleSpeed) {
+        this.lPaddleLoc = this.lPaddleLoc - this.paddleSpeed; 
+      }
+    } else if(e.key === "s" || e.keyCode === 83) {
+      if(this.lPaddleLoc+this.paddleWidth+this.paddleSpeed <=this.height) {
+        this.lPaddleLoc = this.lPaddleLoc + this.paddleSpeed;
+      }
+    } else if(e.key === "ArrowUp" || e.keyCode === 38) {
+      if(this.rPaddleLoc >= this.paddleSpeed) {
+        this.rPaddleLoc = this.rPaddleLoc - this.paddleSpeed;    
+      }
+    } else if(e.key === "ArrowDown" || e.keyCode === 40) {
+      if(this.rPaddleLoc+this.paddleWidth+this.paddleSpeed <=this.height) {
+        this.rPaddleLoc = this.rPaddleLoc + this.paddleSpeed;
+      }
+    } else if(e.key === " " || e.keyCode === 32) {
+      this.initialize();
+    }
+    
     this.draw();
     
   }.bind(this), false);
