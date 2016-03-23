@@ -63,15 +63,26 @@ function Pong() {
           && this.ballYLoc <= this.lPaddleLoc + this.paddleWidth) {
           this.ballXVel = -1*this.ballXVel;
           this.ballXLoc = 0 + this.paddleThickness;
-          this.ballYVel = Math.min(-1*this.ballYVel + 1,10);
+          if(this.ballYVel > 0) {
+            this.ballYVel = -1*Math.min(this.ballYVel +1,10);
+          } else {
+            this.ballYVel = -1*Math.max(this.ballYVel -1,-10);
+          }
+
+          console.log(this.ballYVel);
         } else if(this.ballXLoc+this.ballThickness >= this.width - this.paddleThickness
           && this.ballXLoc+this.ballThickness <= this.width
           && this.ballYLoc+this.ballThickness >= this.rPaddleLoc
           && this.ballYLoc <= this.rPaddleLoc + this.paddleWidth) {
           this.ballXVel = -1*this.ballXVel;
-          this.ballXLoc = this.width - this.paddleThickness - this.ballThickness;
-          this.ballYVel = Math.max(-10,-1*this.ballYVel - 1);
+          this.ballXLoc = this.width - this.paddleThickness
+          if(this.ballYVel > 0) {
+            this.ballYVel = -1*Math.min(this.ballYVel +1,10);
+          } else {
+            this.ballYVel = -1*Math.max(this.ballYVel -1,-10);
+          }
 
+          console.log(this.ballYVel);
         } else {
           //check top/bottom wall collisions
           if(this.ballYLoc> this.height) {
