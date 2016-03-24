@@ -73,7 +73,7 @@ function Pong() {
           && this.ballYLoc+this.ballThickness >= this.rPaddleLoc
           && this.ballYLoc <= this.rPaddleLoc + this.paddleWidth) {
           this.ballXVel = -1*this.ballXVel;
-          this.ballXLoc = this.width - this.paddleThickness
+          this.ballXLoc = this.width - this.paddleThickness - this.ballThickness;
           if(this.ballYVel > 0) {
             this.ballYVel = -1*Math.min(this.ballYVel +1,10);
           } else {
