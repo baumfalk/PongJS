@@ -7,7 +7,7 @@ function Pong() {
   this.paddleThickness = this.width / 40;
   this.lPaddleLoc = this.height / 2 - this.paddleWidth / 2;
   this.rPaddleLoc = this.lPaddleLoc;
-  this.paddleSpeed = 5;
+  this.paddleSpeed = this.height/20;
 
   this.ballThickness = this.paddleThickness;
   this.ballXLoc = this.width / 2;
